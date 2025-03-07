@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: purple;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+        }
+
+        .container, .pseudo-container {
+            width: 45%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stack-container {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            padding: 10px;
+            border: 2px solid black;
+            background: #fafafa;
+            min-height: 300px;
+            width: 110px;
+        }
+
+        .stack-box {
+            width: 80px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #3498db;
+            background: #ecf0f1;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            width: 120px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            margin: 5px;
+        }
+
+        .push {
+            background: #2ecc71;
+        }
+
+        .push:hover {
+            background: #27ae60;
+        }
+
+        .pop {
+            background: #e74c3c;
+        }
+
+        .pop:hover {
+            background: #c0392b;
+        }
+
+        .pseudo-code {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-line;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Stack Visualization Container -->
+        <div class="container">
+            <h2>Stack Visualization</h2>
+            <div class="controls">
+                <input type="number" id="value" placeholder="Enter value">
+                <button class="push" onclick="pushStack()">Push</button>
+                <button class="pop" onclick="popStack()">Pop</button>
+            </div>
+            <div class="stack-container" id="stackContainer"></div>
+        </div>
+
+        <!-- Pseudo Code Container (Right Side) -->
+        <div class="pseudo-container">
+            <h2>Algorithm</h2>
+            <div class="pseudo-code">
+              Push: If TOP == MAX_SIZE - 1 → Overflow, else TOP++, Stack[TOP] = value.  
+              Pop: If TOP == -1 → Underflow, else return Stack[TOP], TOP--.  
+              Peek: If TOP == -1 → Empty, else return Stack[TOP].  
+              isEmpty: Return True if TOP == -1, else False.  
+              isFull: Return True if TOP == MAX_SIZE - 1, else False.  
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Stack {
+            constructor(size) {
+                this.size = size;
+                this.stack = [];
+            }
+
+            isFull() {
+                return this.stack.length >= this.size;
+            }
+
+            isEmpty() {
+                return this.stack.length === 0;
+            }
+
+            push(value) {
+                if (this.isFull()) {
+                    alert("Stack Overflow!");
+                    return;
+                }
+                this.stack.push(value);
+                updateStackUI();
+            }
+
+            pop() {
+                if (this.isEmpty()) {
+                    alert("Stack Underflow!");
+                    return;
+                }
+                this.stack.pop();
+                updateStackUI();
+            }
+
+            getStack() {
+                return this.stack;
+            }
+        }
+
+        const stackSize = 6;
+        const stack = new Stack(stackSize);
+
+        function pushStack() {
+            let value = document.getElementById("value").value;
+            if (value === "") {
+                alert("Please enter a value.");
+                return;
+            }
+            stack.push(parseInt(value));
+            document.getElementById("value").value = "";
+        }
+
+        function popStack() {
+            stack.pop();
+        }
+
+        function updateStackUI() {
+            const stackContainer = document.getElementById("stackContainer");
+            stackContainer.innerHTML = "";
+
+            // Create empty slots for unused stack positions
+            const emptySlots = stackSize - stack.getStack().length;
+
+            for (let i = 0; i < emptySlots; i++) {
+                const emptyBox = document.createElement("div");
+                emptyBox.classList.add("stack-box");
+                emptyBox.style.border = "2px dashed lightgray";
+                emptyBox.style.background = "transparent";
+                stackContainer.appendChild(emptyBox);
+            }
+
+            // Add actual stack elements (reverse order for proper visualization)
+            stack.getStack().slice().reverse().forEach(item => {
+                const box = document.createElement("div");
+                box.classList.add("stack-box");
+                box.textContent = item;
+                stackContainer.appendChild(box);
+            });
+        }
+    </script>
+
+</body>
+</html>

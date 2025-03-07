@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubly Linked List Queue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: purple;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            justify-content: space-between;
+        }
+        .box {
+            width: 48%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+        .queue-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            min-height: 50px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            background: #fff;
+            overflow-x: auto;
+        }
+        .queue-item {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: #2ecc71;
+        }
+        button:hover {
+            background: #27ae60;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h2>Doubly Linked List Queue</h2>
+            <div class="controls">
+                <input type="text" id="inputValue" placeholder="Enter value">
+                <button onclick="enqueue()">Enqueue</button>
+                <button onclick="dequeue()" style="background: #e74c3c;">Dequeue</button>
+            </div>
+            <div class="queue-container" id="queue"></div>
+        </div>
+        <div class="box">
+            <h2>Algorithm</h2>
+            <pre>
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+class DoublyLinkedList {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    enqueue(value) {
+        let newNode = new Node(value);
+        if (!this.head) {
+            this.head = this.tail = newNode;
+        } else {
+            this.tail.next = newNode;
+            newNode.prev = this.tail;
+            this.tail = newNode;
+        }
+    }
+
+    dequeue() {
+        if (this.head) {
+            this.head = this.head.next;
+            if (this.head) this.head.prev = null;
+            else this.tail = null;
+        }
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.next = null;
+                this.prev = null;
+            }
+        }
+
+        class DoublyLinkedList {
+            constructor() {
+                this.head = null;
+                this.tail = null;
+            }
+
+            enqueue(value) {
+                let newNode = new Node(value);
+                if (!this.head) {
+                    this.head = this.tail = newNode;
+                } else {
+                    this.tail.next = newNode;
+                    newNode.prev = this.tail;
+                    this.tail = newNode;
+                }
+            }
+
+            dequeue() {
+                if (this.head) {
+                    this.head = this.head.next;
+                    if (this.head) this.head.prev = null;
+                    else this.tail = null;
+                }
+            }
+
+            displayQueue() {
+                let queueDiv = document.getElementById("queue");
+                queueDiv.innerHTML = "";
+                let temp = this.head;
+                while (temp) {
+                    let span = document.createElement("span");
+                    span.classList.add("queue-item");
+                    span.textContent = temp.value;
+                    queueDiv.appendChild(span);
+                    temp = temp.next;
+                }
+            }
+        }
+
+        let dll = new DoublyLinkedList();
+
+        function enqueue() {
+            let input = document.getElementById("inputValue").value;
+            if (input) {
+                dll.enqueue(input);
+                document.getElementById("inputValue").value = "";
+                dll.displayQueue();
+            }
+        }
+
+        function dequeue() {
+            dll.dequeue();
+            dll.displayQueue();
+        }
+    </script>
+</body>
+</html>

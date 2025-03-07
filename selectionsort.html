@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Sort Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: purple;
+        }
+        .container {
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 200px;
+            margin-top: 20px;
+            border: 2px solid black;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        .bar {
+            width: 30px;
+            margin: 5px;
+            background: #3498db;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: 0.5s;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .start { background: #2ecc71; color: white; cursor: pointer; }
+        .start:hover { background: #27ae60; }
+        .reset { background: #e74c3c; color: white; cursor: pointer; }
+        .reset:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Selection Sort Visualization</h2>
+        <div class="controls">
+            <input type="text" id="inputNumbers" placeholder="Enter numbers (comma separated)">
+            <button class="start" onclick="generateBars()">Generate</button>
+            <button class="start" onclick="selectionSort()">Sort</button>
+            <button class="reset" onclick="resetBars()">Reset</button>
+        </div>
+        <div class="bar-container" id="barContainer"></div>
+    </div>
+
+    <script>
+        let values = [];
+        
+        function generateBars() {
+            let input = document.getElementById("inputNumbers").value;
+            values = input.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
+            if (values.length === 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+            displayBars();
+        }
+
+        function displayBars() {
+            let container = document.getElementById("barContainer");
+            container.innerHTML = "";
+            values.forEach(value => {
+                let bar = document.createElement("div");
+                bar.classList.add("bar");
+                bar.style.height = value * 5 + "px";
+                bar.textContent = value;
+                container.appendChild(bar);
+            });
+        }
+
+        async function selectionSort() {
+            let bars = document.querySelectorAll(".bar");
+            for (let i = 0; i < values.length - 1; i++) {
+                let minIdx = i;
+                bars[minIdx].style.background = "red";
+                await new Promise(resolve => setTimeout(resolve, 500));
+                for (let j = i + 1; j < values.length; j++) {
+                    bars[j].style.background = "yellow";
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    if (values[j] < values[minIdx]) {
+                        bars[minIdx].style.background = "#3498db";
+                        minIdx = j;
+                        bars[minIdx].style.background = "red";
+                    } else {
+                        bars[j].style.background = "#3498db";
+                    }
+                }
+                if (minIdx !== i) {
+                    [values[i], values[minIdx]] = [values[minIdx], values[i]];
+                    swapBars(bars[i], bars[minIdx]);
+                }
+                bars[minIdx].style.background = "#3498db";
+                bars[i].style.background = "green";
+            }
+            bars[values.length - 1].style.background = "green";
+        }
+
+        function swapBars(bar1, bar2) {
+            let tempHeight = bar1.style.height;
+            let tempValue = bar1.textContent;
+            bar1.style.height = bar2.style.height;
+            bar1.textContent = bar2.textContent;
+            bar2.style.height = tempHeight;
+            bar2.textContent = tempValue;
+        }
+
+        function resetBars() {
+            document.getElementById("barContainer").innerHTML = "";
+            document.getElementById("inputNumbers").value = "";
+            values = [];
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Linked List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            padding: 20px;
+            color: #fff;
+        }
+        
+        /* Flex container to hold both sections */
+     
+       .main-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Ensures equal height */
+    max-width: 90%;
+    margin: auto;
+        }
+
+   
+        .container {
+    width: 48%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    min-height: 600px;
+    color: black;
+    display: flex;
+    flex-direction: column;
+}
+        
+
+        h1 {
+            color: red;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(50% - 22px);
+            transition: box-shadow 0.3s;
+        }
+
+        input:focus {
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .circle-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            margin: 20px auto;
+            background: #e8f4fc;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #1e90ff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .node:hover {
+            background: #ff6347;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Wrapper for layout control -->
+    <div class="main-wrapper">
+        <!-- Circular Linked List Section -->
+        <div class="container">
+            <h1>Circular Linked List</h1>
+            <input type="text" id="dataInput" placeholder="Enter data">
+            <button onclick="insertAtBeginning()">Insert at Beginning</button>
+            <button onclick="insertAtEnd()">Insert at End</button>
+            <br>
+            <input type="text" id="insertData" placeholder="New Data">
+            <input type="text" id="targetData" placeholder="Insert After">
+            <button onclick="insertInBetween()">Insert in Between</button>
+            <br>
+            <input type="text" id="deleteData" placeholder="Enter Data to Delete">
+            <button onclick="deleteNode()">Delete Node</button>
+            <h2>Linked List:</h2>
+            <div class="circle-container" id="linkedList"></div>
+        </div>
+
+        <!-- Algorithm Section (Shifted to Right) -->
+        <div class="container">
+            <h1>Algorithm</h1>
+<p>
+    <strong>Class Node:</strong> Data ← value, Next ← NULL  
+    <br><br>
+    <strong>Class CircularLinkedList:</strong> Head ← NULL  
+    <br><br>
+    
+    <strong>InsertAtBeginning(value):</strong> Create newNode,  
+    If Head = NULL → newNode.Next = newNode, Head = newNode  
+    Else temp = Head, while temp.Next ≠ Head → temp = temp.Next, temp.Next = newNode,  
+    newNode.Next = Head, Head = newNode  
+    <br><br>
+
+    <strong>InsertAtEnd(value):</strong> Create newNode,  
+    If Head = NULL → newNode.Next = newNode, Head = newNode  
+    Else temp = Head, while temp.Next ≠ Head → temp = temp.Next, temp.Next = newNode,  
+    newNode.Next = Head  
+    <br><br>
+
+    <strong>InsertAfter(target, value):</strong>  
+    If Head = NULL → Print "List empty", Return; temp = Head,  
+    do if temp.Data = target → Create newNode, newNode.Next = temp.Next, temp.Next = newNode, Return;  
+    temp = temp.Next while temp ≠ Head, Print "Target Not Found"  
+    <br><br>
+
+    <strong>DeleteNode(value):</strong>  
+    If Head = NULL → Print "List empty", Return;  
+    If Head.Data = value AND Head.Next = Head → Head = NULL, Return;  
+    If Head.Data = value → temp = Head, while temp.Next ≠ Head → temp = temp.Next, temp.Next = Head.Next, Head = Head.Next, Return;  
+    temp = Head, prev = NULL,  
+    do if temp.Data = value → prev.Next = temp.Next, Return; prev = temp, temp = temp.Next while temp ≠ Head, Print "Node Not Found"  
+    <br><br>
+
+    <strong>Display():</strong>  
+    If Head = NULL → Print "List empty", Return;  
+    temp = Head,  
+    do Print temp.Data, temp = temp.Next while temp ≠ Head  
+    <br><br>
+
+    <strong>Search(value):</strong>  
+    If Head = NULL → Print "List empty", Return False;  
+    temp = Head,  
+    do if temp.Data = value → Print "Element Found", Return True;  
+    temp = temp.Next while temp ≠ Head, Print "Element Not Found", Return False  
+</p>
+
+        </div>
+    </div>
+
+    <script>
+        class Node {
+            constructor(data) {
+                this.data = data;
+                this.next = null;
+            }
+        }
+        class CircularLinkedList {
+            constructor() {
+                this.head = null;
+            }
+            insertAtBeginning(data) {
+                let newNode = new Node(data);
+                if (!this.head) {
+                    this.head = newNode;
+                    newNode.next = this.head;
+                } else {
+                    let temp = this.head;
+                    while (temp.next !== this.head) {
+                        temp = temp.next;
+                    }
+                    newNode.next = this.head;
+                    temp.next = newNode;
+                    this.head = newNode;
+                }
+                this.display();
+            }
+            insertAtEnd(data) {
+                let newNode = new Node(data);
+                if (!this.head) {
+                    this.head = newNode;
+                    newNode.next = this.head;
+                } else {
+                    let temp = this.head;
+                    while (temp.next !== this.head) {
+                        temp = temp.next;
+                    }
+                    temp.next = newNode;
+                    newNode.next = this.head;
+                }
+                this.display();
+            }
+            insertAfter(target, newData) {
+                if (!this.head) return alert("List is empty!");
+                let current = this.head;
+                do {
+                    if (current.data === target) {
+                        let newNode = new Node(newData);
+                        newNode.next = current.next;
+                        current.next = newNode;
+                        this.display();
+                        return;
+                    }
+                    current = current.next;
+                } while (current !== this.head);
+                alert("Target data not found!");
+            }
+            deleteNode(value) {
+                if (!this.head) return;
+                if (this.head.data === value && this.head.next === this.head) {
+                    this.head = null;
+                } else if (this.head.data === value) {
+                    let temp = this.head;
+                    while (temp.next !== this.head) {
+                        temp = temp.next;
+                    }
+                    temp.next = this.head.next;
+                    this.head = this.head.next;
+                } else {
+                    let current = this.head;
+                    let prev = null;
+                    do {
+                        if (current.data === value) {
+                            prev.next = current.next;
+                            this.display();
+                            return;
+                        }
+                        prev = current;
+                        current = current.next;
+                    } while (current !== this.head);
+                }
+                this.display();
+            }
+            display() {
+                let listElement = document.getElementById("linkedList");
+                listElement.innerHTML = "";
+                if (!this.head) return;
+                let current = this.head;
+                let nodes = [];
+                do {
+                    nodes.push(current.data);
+                    current = current.next;
+                } while (current !== this.head);
+                let angleStep = (2 * Math.PI) / nodes.length;
+                let radius = 120;
+                nodes.forEach((data, index) => {
+                    let nodeElement = document.createElement("div");
+                    nodeElement.className = "node";
+                    nodeElement.textContent = data;
+                    let angle = angleStep * index;
+                    let x = radius * Math.cos(angle) + 125;
+                    let y = radius * Math.sin(angle) + 125;
+                    nodeElement.style.transform = `translate(${x}px, ${y}px)`;
+                    listElement.appendChild(nodeElement);
+                });
+            }
+        }
+        let list = new CircularLinkedList();
+        function insertAtBeginning() {
+            let data = document.getElementById("dataInput").value;
+            if (data) {
+                list.insertAtBeginning(data);
+                document.getElementById("dataInput").value = "";
+            }
+        }
+        function insertAtEnd() {
+            let data = document.getElementById("dataInput").value;
+            if (data) {
+                list.insertAtEnd(data);
+                document.getElementById("dataInput").value = "";
+            }
+        }
+        function insertInBetween() {
+            let newData = document.getElementById("insertData").value;
+            let target = document.getElementById("targetData").value;
+            if (newData && target) {
+                list.insertAfter(target, newData);
+                document.getElementById("insertData").value = "";
+                document.getElementById("targetData").value = "";
+            }
+        }
+        function deleteNode() {
+            let value = document.getElementById("deleteData").value;
+            if (value) {
+                list.deleteNode(value);
+                document.getElementById("deleteData").value = "";
+            }
+        }
+    </script>
+</body>
+</html>

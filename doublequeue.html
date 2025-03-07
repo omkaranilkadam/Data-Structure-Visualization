@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Queue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            background-color: #f4f4f4;
+             background-color: purple;
+            margin: 10;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .container {
+            width: 45%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+            
+        }
+        .queue {
+            display: flex;
+            justify-content: left;
+            gap: 10px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background: #fff;
+            min-height: 40px;
+            margin-top: 20px;
+        }
+        .queue div {
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Double Queue Implementation</h2>
+        <button onclick="enqueueFront()">Enqueue Front</button>
+        <button onclick="enqueueRear()">Enqueue Rear</button>
+        <button onclick="dequeueFront()">Dequeue Front</button>
+        <button onclick="dequeueRear()">Dequeue Rear</button>
+        <div class="queue" id="queue"></div>
+    </div>
+    <div class="container">
+        <h2>Algorithm of Double Queue</h2>
+        <pre>
+1. Initialize an empty queue.
+2. EnqueueFront(value):
+   - Insert value at the front of the queue.
+3. EnqueueRear(value):
+   - Insert value at the rear of the queue.
+4. DequeueFront():
+   - Remove value from the front if the queue is not empty.
+5. DequeueRear():
+   - Remove value from the rear if the queue is not empty.
+6. Display the queue contents.
+        </pre>
+    </div>
+
+    <script>
+        let queue = [];
+        function renderQueue() {
+            document.getElementById("queue").innerHTML = queue.map(item => `<div>${item}</div>`).join('');
+        }
+        function enqueueFront() {
+            let value = prompt("Enter value to enqueue at front:");
+            if (value) { queue.unshift(value); renderQueue(); }
+        }
+        function enqueueRear() {
+            let value = prompt("Enter value to enqueue at rear:");
+            if (value) { queue.push(value); renderQueue(); }
+        }
+        function dequeueFront() {
+            if (queue.length > 0) { queue.shift(); renderQueue(); }
+            else alert("Queue is empty!");
+        }
+        function dequeueRear() {
+            if (queue.length > 0) { queue.pop(); renderQueue(); }
+            else alert("Queue is empty!");
+        }
+    </script>
+</body>
+</html>

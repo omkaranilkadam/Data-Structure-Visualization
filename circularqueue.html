@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: purple;
+            font-size: 1.5em;
+        }
+        .queue-container {
+            width: 45%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+            text-align: center;
+        }
+        .queue-element {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #cce5ff;
+            border: 1px solid #007bff;
+            font-size: 1.2em;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            text-align: center;
+        }
+        #queue {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.2em;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 60%;
+            margin: 10px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="queue-container">
+        <h2>Welcome to Circular Queue</h2>
+        <input type="text" id="enqueueInput" placeholder="Enter value">
+        <div>
+            <button onclick="enqueue()">Enqueue</button>
+            <button onclick="dequeue()">Dequeue</button>
+            <button onclick="peek()">Peek</button>
+        </div>
+        <div id="queue"></div>
+    </div>
+    <div class="queue-container">
+    <h1>Algorithm</h1>
+    <p>Initialize front = -1, rear = -1, size = N
+
+Enqueue(x):
+    If (rear + 1) % size == front:
+        Print "Queue Full"
+    Else:
+        If front == -1:
+            front = rear = 0
+        Else:
+            rear = (rear + 1) % size
+        queue[rear] = x
+
+Dequeue():
+    If front == -1:
+        Print "Queue Empty"
+    Else:
+        Print "Dequeued:", queue[front]
+        If front == rear:
+            front = rear = -1
+        Else:
+            front = (front + 1) % size
+
+Peek():
+    If front == -1:
+        Print "Queue Empty"
+    Else:
+        Print "Front Element:", queue[front]
+</p>
+    </div>
+    <script>
+        let queue = [];
+        const maxSize = 6;
+
+        function renderQueue() {
+            const queueContainer = document.getElementById('queue');
+            queueContainer.innerHTML = '';
+            const radius = 120;
+            const centerX = queueContainer.clientWidth / 2;
+            const centerY = queueContainer.clientHeight / 2;
+            const angleStep = (2 * Math.PI) / queue.length;
+
+            queue.forEach((element, index) => {
+                const angle = index * angleStep - Math.PI / 2;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
+                const div = document.createElement('div');
+                div.className = 'queue-element';
+                div.innerText = element;
+                div.style.left = `${x}px`;
+                div.style.top = `${y}px`;
+                div.style.transform = 'translate(-50%, -50%)';
+
+                queueContainer.appendChild(div);
+            });
+        }
+
+        function enqueue() {
+            const inputElement = document.getElementById('enqueueInput');
+            const element = inputElement.value.trim();
+            if (element === "") {
+                alert("Please enter a value!");
+                return;
+            }
+            if (queue.length >= maxSize) {
+                alert('Queue Overflow!');
+                return;
+            }
+            queue.push(element);
+            inputElement.value = ""; // Clear input field
+            renderQueue();
+        }
+
+        function dequeue() {
+            if (queue.length === 0) {
+                alert('Queue Underflow! Queue is empty.');
+                return;
+            }
+            alert(`Dequeued element: ${queue.shift()}`);
+            renderQueue();
+        }
+
+        function peek() {
+            if (queue.length === 0) {
+                alert('Queue is empty!');
+            } else {
+                alert(`Front element is: ${queue[0]}`);
+            }
+        }
+    </script>
+</body>
+</html>

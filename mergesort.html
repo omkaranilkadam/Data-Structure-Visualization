@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Sort Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: blue;
+        }
+        .container {
+            width: 80%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 200px;
+            margin-top: 20px;
+            border: 2px solid black;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        .bar {
+            width: 30px;
+            margin: 5px;
+            background: #3498db;
+            display: inline-block;
+            transition: 0.5s;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+        }
+        .start {
+            background: #2ecc71;
+        }
+        .start:hover {
+            background: #27ae60;
+        }
+        .reset {
+            background: #e74c3c;
+        }
+        .reset:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Merge Sort Visualization</h2>
+        <div class="controls">
+            <input type="text" id="inputNumbers" placeholder="Enter numbers (comma separated)">
+            <button class="start" onclick="generateBars()">Generate</button>
+            <button class="start" onclick="mergeSortWrapper()">Sort</button>
+            <button class="reset" onclick="resetBars()">Reset</button>
+        </div>
+        <div class="bar-container" id="barContainer"></div>
+    </div>
+
+    <script>
+        let values = [];
+
+        function generateBars() {
+            let input = document.getElementById("inputNumbers").value;
+            values = input.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
+
+            if (values.length === 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            displayBars();
+        }
+
+        function displayBars() {
+            let container = document.getElementById("barContainer");
+            container.innerHTML = "";
+            values.forEach(value => {
+                let bar = document.createElement("div");
+                bar.classList.add("bar");
+                bar.style.height = value * 5 + "px"; // Scale height
+                bar.textContent = value;
+                container.appendChild(bar);
+            });
+        }
+
+        async function mergeSortWrapper() {
+            await mergeSort(0, values.length - 1);
+        }
+
+        async function mergeSort(left, right) {
+            if (left >= right) return;
+
+            let mid = Math.floor((left + right) / 2);
+
+            await mergeSort(left, mid);
+            await mergeSort(mid + 1, right);
+            await merge(left, mid, right);
+        }
+
+        async function merge(left, mid, right) {
+            let bars = document.querySelectorAll(".bar");
+
+            let leftArr = values.slice(left, mid + 1);
+            let rightArr = values.slice(mid + 1, right + 1);
+
+            let i = 0, j = 0, k = left;
+
+            while (i < leftArr.length && j < rightArr.length) {
+                bars[k].style.background = "red";
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                if (leftArr[i] <= rightArr[j]) {
+                    values[k] = leftArr[i];
+                    i++;
+                } else {
+                    values[k] = rightArr[j];
+                    j++;
+                }
+
+                bars[k].style.height = values[k] * 5 + "px";
+                bars[k].textContent = values[k];
+
+                bars[k].style.background = "#3498db";
+                k++;
+            }
+
+            while (i < leftArr.length) {
+                bars[k].style.background = "red";
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                values[k] = leftArr[i];
+                bars[k].style.height = values[k] * 5 + "px";
+                bars[k].textContent = values[k];
+
+                bars[k].style.background = "#3498db";
+                i++;
+                k++;
+            }
+
+            while (j < rightArr.length) {
+                bars[k].style.background = "red";
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                values[k] = rightArr[j];
+                bars[k].style.height = values[k] * 5 + "px";
+                bars[k].textContent = values[k];
+
+                bars[k].style.background = "#3498db";
+                j++;
+                k++;
+            }
+        }
+
+        function resetBars() {
+            document.getElementById("barContainer").innerHTML = "";
+            document.getElementById("inputNumbers").value = "";
+            values = [];
+        }
+    </script>
+</body>
+</html>
